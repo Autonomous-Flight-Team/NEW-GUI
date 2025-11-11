@@ -62,7 +62,7 @@ menu.add_cascade(label='PICO Menu', menu=flightmodes)
 menu.add_command(label='Home', command=show_home)
 flightmodes.add_command(label='Quadcopter', command=show_quadcopter)
 flightmodes.add_command(label='Fixed Wing', command=show_fixed_wing)
-flightmodes.add_command(label='Home', command=show_home)
+# flightmodes.add_command(label='Home', command=show_home)
 
 # END Menu Bar code
 
@@ -95,7 +95,9 @@ left_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=10)
     # expand=True -> allows panel to grow/shrink if window is resized
     # padx/pady=10 -> adds padding (extra space with bckg color) around the frame
 
-tk.Label(left_panel, text="COMMANDS", font=("Segoe UI", 14), fg='black')
+# Add a visible label at the top of the left panel for commands
+left_label = tk.Label(left_panel, text="Commands", font=("Segoe UI", 14, 'bold'), fg='black', bg='lightblue')
+left_label.pack(side=tk.TOP, anchor='n', pady=(8,4))
 
 # ------------------------
 # Right Panel (MAP)
@@ -109,7 +111,9 @@ right_panel = tk.Frame(
 right_panel.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=5, pady=10)
     # side=tk.RIGHT -> places this panel on the right side of 'top_frame'
 
-tk.Label(right_panel, text="MAP", font=("Segoe UI", 14), fg='black')
+# Add a visible label at the top of the right panel for the map
+right_label = tk.Label(right_panel, text="MAP", font=("Segoe UI", 14, 'bold'), fg='black', bg='lightgreen')
+right_label.pack(side=tk.TOP, anchor='n', pady=(8,4))
 
 # ========================================
 # Bottom Panel (Data - Altitude, etc.)
@@ -122,7 +126,9 @@ bottom_panel = tk.Frame(
 )
 bottom_panel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
-tk.Label(bottom_panel, text="DATA", font=("Segoe UI", 14), fg='black')
+# Add a visible label at the top of the bottom panel for telemetry/data
+bottom_label = tk.Label(bottom_panel, text="DATA - Altitude, Speed, Heading", font=("Segoe UI", 13, 'bold'), fg='black', bg='lightgrey')
+bottom_label.pack(side=tk.TOP, anchor='n', pady=(6,4))
 
 # END Home Page Panels Code
 
