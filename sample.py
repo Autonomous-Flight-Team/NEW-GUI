@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from tkinter import *
+import tkintermapview
 
 # Need to include this import to use fonts as the above 'from tkinter...' statement
 # only imports from tkinter, but not its submodules (which includes fonts).
@@ -24,7 +25,7 @@ root.geometry("600x500")
 # The following is creating a Menu Bar
 
 # Increasing the size of the menu bar not working... need to fix.
-menu_font = font.Font(family='Segoe UI', size=56)
+menu_font = font.Font(family='Segoe UI', size=10)
 
 menu = Menu(root, font=menu_font)
 # menu.place(x=0, y=0, width=600, height=20)
@@ -59,10 +60,10 @@ def show_home():
 
 flightmodes = Menu(menu)
 menu.add_cascade(label='PICO Menu', menu=flightmodes)
-menu.add_command(label='Home', command=show_home)
+# menu.add_command(label='Home', command=show_home)
 flightmodes.add_command(label='Quadcopter', command=show_quadcopter)
 flightmodes.add_command(label='Fixed Wing', command=show_fixed_wing)
-# flightmodes.add_command(label='Home', command=show_home)
+flightmodes.add_command(label='Home', command=show_home)
 
 # END Menu Bar code
 
@@ -115,6 +116,13 @@ right_panel.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=5, pady=10)
 right_label = tk.Label(right_panel, text="MAP", font=("Segoe UI", 14, 'bold'), fg='black', bg='lightgreen')
 right_label.pack(side=tk.TOP, anchor='n', pady=(8,4))
 
+# create map widget
+map_widget = tkintermapview.TkinterMapView(right_panel, width=360, height=230, corner_radius=0)
+map_widget.pack(fill=tk.BOTH, expand=True)
+# set current widget position and zoom
+map_widget.set_position(47.65821445872502, -122.30391059662294)  # McMahon
+map_widget.set_zoom(15)
+
 # ========================================
 # Bottom Panel (Data - Altitude, etc.)
 # ========================================
@@ -133,8 +141,3 @@ bottom_label.pack(side=tk.TOP, anchor='n', pady=(6,4))
 # END Home Page Panels Code
 
 root.mainloop()
-
-
-
-
-
