@@ -6,5 +6,8 @@
 **activate virtual environment**\
 `source guivenv/bin/activate`
 
+**install dependecies**\
+`pip3 install tkintermapview`
+
 **run the program**\
-`python gui.py`
+`python sample.py`
