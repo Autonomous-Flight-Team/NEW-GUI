@@ -1,5 +1,5 @@
 import tkinter as tk
-
+from tkinter import font
 
 def create_bottom_panel(parent):
     """Create and pack the bottom data panel inside the given parent (typically root).
@@ -19,7 +19,24 @@ def create_bottom_panel(parent):
     bottom_panel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
     # Add a visible label at the top of the bottom panel for telemetry/data
-    bottom_label = tk.Label(bottom_panel, text="DATA - Altitude, Speed, Heading", font=("Segoe UI", 13, 'bold'), fg='black', bg='lightgrey')
-    bottom_label.pack(side=tk.TOP, anchor='n', pady=(6, 4))
+    data_title = tk.Label(bottom_panel, text="DATA - Altitude, Speed, Heading", font=("Segoe UI", 16, 'bold'), fg='black', bg='lightgrey')
+    data_title.pack(side=tk.TOP, anchor='n', pady=(6, 4))
+
+    labels = tk.Frame(bottom_panel, bg='lightgrey')
+    labels.pack(anchor='center')
+
+    label_font = font.Font(family='Segoe UI', size=14, weight='bold')
+    tk.Label(labels, text='Altitude', font=label_font, bg='lightgrey').grid(row=0, column=0, padx=20, pady=5)
+    # display data in row=0, column=1
+
+    tk.Label(labels, text='Ground Speed', font=label_font, bg='lightgrey').grid(row=0, column=2, padx=20, pady=5)
+    # display data in row=0, column=3
+
+    tk.Label(labels, text='Yaw', font=label_font, bg='lightgrey').grid(row=1, column=0, padx=20, pady=5)
+    tk.Label(labels, text='Vertical Velocity', font=label_font, bg='lightgrey').grid(row=1, column=2, padx=20, pady=5)
+    tk.Label(labels, text='Distance to WP', font=label_font, bg='lightgrey').grid(row=2, column=0, padx=20, pady=5)
+    tk.Label(labels, text='Distance from home', font=label_font, bg='lightgrey').grid(row=2, column=2, padx=20, pady=5)
+
+    
 
     return bottom_panel

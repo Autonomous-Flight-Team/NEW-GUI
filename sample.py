@@ -8,11 +8,6 @@ import tkintermapview
 # only imports from tkinter, but not its submodules (which includes fonts).
 from tkinter import font
 
-# m = tk.Tk()
-# m.title("Sample Tkinter Window")
-# m.geometry("400x300")
-# m.mainloop()
-
 # 'root' is the main window
 root = Tk()
 root.title("Sample Tkinter Window")

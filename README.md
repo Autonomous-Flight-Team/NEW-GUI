@@ -10,4 +10,4 @@
 `pip3 install tkintermapview`
 
 **run the program**\
-`python sample.py`
+`python Main.py`
