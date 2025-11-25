@@ -31,7 +31,7 @@ def create_bottom_panel(parent):
 
     label2 = tk.Label(labels, text='Ground Speed', font=label_font, bg='lightgrey', fg='black').grid(row=0, column=2, padx=20, pady=5, sticky='nsew')
     # display data in row=0, column=3
-
+    
     label3 = tk.Label(labels, text='Yaw', font=label_font, bg='lightgrey', fg='black').grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
     label4 = tk.Label(labels, text='Vertical Velocity', font=label_font, bg='lightgrey', fg='black').grid(row=1, column=2, padx=20, pady=5, sticky='nsew')
     label5 = tk.Label(labels, text='Distance to WP', font=label_font, bg='lightgrey', fg='black').grid(row=2, column=0, padx=20, pady=5, sticky='nsew')
