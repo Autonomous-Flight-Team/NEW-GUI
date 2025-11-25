@@ -19,7 +19,7 @@ def create_left_panel(parent):
     left_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=10)
 
     # Add a visible label at the top of the left panel for commands
-    left_label = tk.Label(left_panel, text="Commands", font=("Segoe UI", 14, 'bold'), fg='black', bg='lightblue')
+    left_label = tk.Label(left_panel, text="COMMANDS", font=("Segoe UI", 14, 'bold'), fg='black', bg='lightblue')
     left_label.pack(side=tk.TOP, anchor='n', pady=(8, 4))
 
     return left_panel

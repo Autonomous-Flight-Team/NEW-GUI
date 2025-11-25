@@ -7,7 +7,7 @@
 `source guivenv/bin/activate`
 
 **install dependecies**\
-`pip3 install tkintermapview`
+`pip install -r requirements.txt`
 
 **run the program**\
 `python Main.py`
