@@ -10,4 +10,4 @@
 `pip install -r requirements.txt`
 
 **run the program**\
-`python Main.py`
+`python -m src.Main`
