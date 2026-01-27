@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import font
 from .mavsdkManager import MAVSDKManager
 
-import src.panels.TopContainer as TopContainer
-import src.panels.leftPanel as leftPanel
-import src.panels.rightPanel as rightPanel
+from src.panels.TopContainer import TopContainer
+from src.panels.leftPanel import LeftPanel
+from src.panels.rightPanel import RightPanel
 from src.panels.bottomPanel import BottomPanel
 
 
@@ -50,11 +50,17 @@ def main():
     main_menu.add_command(label='Telemetry Logs')
 
     # Create containers/panels using the modularized functions
-    top_frame = TopContainer.create_top_container(root)
+    top_container = TopContainer()
+    top_frame = top_container.create_top_container(root)
     # Keep references to the panels in case we need to update them later.
     # Prefix with underscore to indicate they are intentionally unused for now
-    _left = leftPanel.create_left_panel(top_frame)
-    _right = rightPanel.create_right_panel(top_frame)
+
+    left_panel = LeftPanel()
+    _left = left_panel.create_left_panel(top_frame)
+
+    right_panel = RightPanel();
+    _right, drone_marker, map_widget = right_panel.create_right_panel(top_frame)
+
     bottom_panel = BottomPanel()
     _bottom = bottom_panel.create_bottom_panel(root)
 
@@ -63,6 +69,7 @@ def main():
 
     def refresh():
         bottom_panel.update_telemetry(mavsdk.telemetry)
+        right_panel.update_drone_marker(mavsdk.telemetry, drone_marker, map_widget)
         root.after(200, refresh)
 
     refresh()

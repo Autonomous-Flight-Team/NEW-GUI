@@ -11,6 +11,8 @@ class MAVSDKManager:
 
         # Telemetry storage (GUI reads these)
         self.telemetry = {
+            "lat": None,
+            "lon": None,
             "altitude": None,
             "ground_speed": None,
             "yaw": None,
@@ -27,7 +29,6 @@ class MAVSDKManager:
     def start_event_loop(self):
         asyncio.set_event_loop(self.loop)
         #starts the asyncio loop
-        #self.loop.run_until_complete(self.connect_and_start_streams())
         self.loop.create_task(self.connect_and_start_streams())
         self.loop.run_forever()
 
@@ -48,12 +49,14 @@ class MAVSDKManager:
 
     async def stream_position(self):
         async for pos in self.drone.telemetry.position():
+            self.telemetry["lat"] = pos.latitude_deg;
+            self.telemetry["lon"] = pos.longitude_deg;
             self.telemetry["altitude"] = round(pos.relative_altitude_m, 2)
 
     async def stream_velocity(self):
-        #ned= north east down coord system. Velocity in m/s
+        #ned = north east down coord system. Velocity in m/s
         async for vel in self.drone.telemetry.velocity_ned():
-            #pythagorean theorem speed=sqrt(north² + east²)
+            #pythagorean theorem speed = sqrt(north² + east²)
             hor_speed = (vel.north_m_s**2 + vel.east_m_s**2) ** 0.5
             self.telemetry["ground_speed"] = round(hor_speed, 2)
             self.telemetry["vertical_speed"] = round(vel.down_m_s, 2)
