@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import font
 from .mavsdkManager import MAVSDKManager
+from .FlightPlanner import FlightPlanner
 
 import src.panels.TopContainer as TopContainer
 import src.panels.leftPanel as leftPanel
@@ -20,23 +21,26 @@ def main():
     root.config(menu=menu)
 
     content = tk.Frame(root)
+    content.pack(fill=tk.BOTH, expand=True)
+
+    # Create FlightPlanner instance
+    flight_planner = FlightPlanner(root)
 
     # Page callbacks need access to `content` and `menu`, so define them here
-    # def show_quadcopter():
-    #     for widget in content.winfo_children():
-    #         widget.destroy()
-    #     tk.Label(content, text="Quadcopter Page", font=("Segoe UI", 14)).pack(pady=5)
+    def show_home():
+        """Display the home page with all panels."""
+        for widget in content.winfo_children():
+            widget.destroy()
+        
+        # Recreate the home page layout
+        top_frame = TopContainer.create_top_container(content)
+        _left = leftPanel.create_left_panel(top_frame)
+        _right = rightPanel.create_right_panel(top_frame)
+        # Note: bottom_panel stays at root level, not in content
 
-    # def show_fixed_wing():
-    #     for widget in content.winfo_children():
-    #         widget.destroy()
-    #     tk.Label(content, text="Fixed Wing Page", font=("Segoe UI", 14)).pack(pady=5)
-
-    # def show_home():
-    #     for widget in content.winfo_children():
-    #         widget.destroy()
-    #     tk.Label(content, text="Welcome to the GUI for the Autonomous Flight Team!",
-    #              font=("Segoe UI", 16)).pack(pady=50)
+    def show_flight_planner():
+        """Display the flight planner page."""
+        flight_planner.create_flight_planner_page(content)
 
     # Menu items
     select_uav = tk.Menu(menu)
@@ -45,12 +49,12 @@ def main():
     select_uav.add_command(label='Fixed Wing')
     main_menu = tk.Menu(menu)
     menu.add_cascade(label='Menu', menu=main_menu)
-    main_menu.add_command(label='Home')
-    main_menu.add_command(label='Flight Planner')
+    main_menu.add_command(label='Home', command=show_home)
+    main_menu.add_command(label='Flight Planner', command=show_flight_planner)
     main_menu.add_command(label='Telemetry Logs')
 
     # Create containers/panels using the modularized functions
-    top_frame = TopContainer.create_top_container(root)
+    top_frame = TopContainer.create_top_container(content)
     # Keep references to the panels in case we need to update them later.
     # Prefix with underscore to indicate they are intentionally unused for now
     _left = leftPanel.create_left_panel(top_frame)
