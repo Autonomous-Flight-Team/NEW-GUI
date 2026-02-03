@@ -26,12 +26,31 @@ class LeftPanel:
         left_label.grid(row=0, column=0, pady=(8, 4), sticky='n')
 
         label_font = font.Font(family='Segoe UI', size=14, weight='bold')
+        # button_font = font.Font(family='Segoe UI', size=10)
 
-        label1 = tk.Label(left_panel, text='Autonomous/Manual', font=label_font, bg='lightblue', fg='black').grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
-        label2 = tk.Label(left_panel, text='Return Home', font=label_font, bg='lightblue', fg='black').grid(row=2, column=0, padx=20, pady=5, sticky='nsew')
-        label3 = tk.Label(left_panel, text='Hover', font=label_font, bg='lightblue', fg='black').grid(row=3, column=0, padx=20, pady=5, sticky='nsew')
+        # label1 = tk.Label(left_panel, text='Autonomous/Manual', font=label_font, bg='lightblue', fg='black').grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
+        auto_manual_label = tk.Label(left_panel, text='Autonomous/Manual', font=label_font, bg='lightblue', fg='black')
+        auto_manual_label.grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
+        auto_btn = tk.Button(left_panel, text="Autonomous")
+        auto_btn.grid(row=2, column=0, pady=5)
+        manual_btn = tk.Button(left_panel, text="Manual")
+        manual_btn.grid(row=3, column=0, pady=5)
+        
 
-        for i in range(4): 
+        # label2 = tk.Label(left_panel, text='Return Home', font=label_font, bg='lightblue', fg='black').grid(row=2, column=0, padx=20, pady=5, sticky='nsew')
+        return_home_label = tk.Label(left_panel, text='Return Home', font=label_font, bg='lightblue', fg='black')
+        return_home_label.grid(row=4, column=0, padx=20, pady=5, sticky='nsew')
+        return_home_btn = tk.Button(left_panel, text="Return Home")
+        return_home_btn.grid(row=5, column=0, pady=5)
+
+        # label3 = tk.Label(left_panel, text='Hover', font=label_font, bg='lightblue', fg='black').grid(row=3, column=0, padx=20, pady=5, sticky='nsew')
+        hover_label = tk.Label(left_panel, text='Hover', font=label_font, bg='lightblue', fg='black')
+        hover_label.grid(row=6, column=0, padx=20, pady=5, sticky='nsew')
+        hover_btn = tk.Button(left_panel, text="Hover")
+        hover_btn.grid(row=7, column=0, pady=5)
+
+
+        for i in range(8): 
             tk.Grid.rowconfigure(left_panel, i, weight = 1)
             tk.Grid.columnconfigure(left_panel, 0, weight = 1)
 
