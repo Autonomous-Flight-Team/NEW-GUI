@@ -9,23 +9,31 @@ class LeftPanel:
         self.auto_btn = None
         self.manual_btn = None
 
+    # For 'set_autonomous_mode' and 'set_manual_mode', when that respective
+    # is hit, the other button (either 'manual' or 'autonomous') is changed
+    # to a white background.
+
     # The following function changes the drone to 'autonomous' mode when the
-    # button is clicked and updates the button's appearance. 
+    # button is clicked and updates the button's appearance (green).
     def set_autonomous_mode(self):
         self.current_mode = 'autonomous'
         self.auto_btn.config(relief=tk.SUNKEN, bg='#4CAF50', fg='white')
         self.manual_btn.config(relief=tk.RAISED, bg='SystemButtonFace', fg='black')
         print("Mode set to: Autonomous")
 
+    # The following function changes drone to 'manual' mode when the button
+    # is clicked and updates the button's appearance (blue).
     def set_manual_mode(self):
         self.current_mode = 'manual'
         self.auto_btn.config(relief=tk.RAISED, bg='SystemButtonFace', fg='black')
-        self.manual_btn.config(relief=tk.SUNKEN, bg='#2196F3', fg='white')
+        self.manual_btn.config(relief=tk.SUNKEN, bg='#4CAF50', fg='white')
         print("Mode set to: Manual")
 
+    # Printing 'Returning home.'
     def return_home(self):
         print("Returning home.")
     
+    # Printing 'Hovering at current coordinates.'
     def hover(self):
         print("Hovering at current coordinates.")
 
@@ -73,10 +81,6 @@ class LeftPanel:
 
         auto_manual_label.grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
 
-
-
-        # auto_btn = tk.Button(left_panel, text="Autonomous")
-
         self.auto_btn = tk.Button(
             left_panel,
             text="Autonomous",
@@ -118,7 +122,7 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.return_home,
-            bg='#ff9800',
+            bg="#4c00ff",
             fg='white',
             relief=tk.RAISED
         )
