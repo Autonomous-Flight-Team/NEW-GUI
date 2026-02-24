@@ -5,7 +5,8 @@ import customtkinter as ctk
 class LeftPanel:
 
     # Adding functionality to show which mode is currently active.
-    def __init__(self):
+    def __init__(self, drone_controller):
+        self.drone = drone_controller
         self.current_mode = None
         self.auto_btn = None
         self.manual_btn = None
@@ -69,19 +70,6 @@ class LeftPanel:
         label_font = font.Font(family='Segoe UI', size=14, weight='bold')
         button_font = font.Font(family='Segoe UI', size=10)
 
-
-
-        # label1 = tk.Label(left_panel, text='Autonomous/Manual', font=label_font, bg='lightblue', fg='black').grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
-        # auto_manual_label = tk.Label(
-        #     left_panel, 
-        #     text='Autonomous/Manual', 
-        #     font=label_font, 
-        #     bg='lightblue', 
-        #     fg='black'
-        # )
-
-        # auto_manual_label.grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
-
         self.auto_btn = tk.Button(
             left_panel,
             text="Autonomous",
@@ -107,17 +95,6 @@ class LeftPanel:
         )
 
         self.manual_btn.grid(row=3, column=0, pady=3)
-        
-        # label2 = tk.Label(left_panel, text='Return Home', font=label_font, bg='lightblue', fg='black').grid(row=2, column=0, padx=20, pady=5, sticky='nsew')
-        # return_home_label = tk.Label(
-        #     left_panel, 
-        #     text='Return Home', 
-        #     font=label_font, 
-        #     bg='lightblue', 
-        #     fg='black'
-        # )
-
-        # return_home_label.grid(row=4, column=0, padx=20, pady=(10, 5), sticky='ew')
 
         return_home_btn = tk.Button(
             left_panel, 
@@ -131,16 +108,6 @@ class LeftPanel:
             relief=tk.RAISED
         )
         return_home_btn.grid(row=5, column=0, pady=3)
-
-        # label3 = tk.Label(left_panel, text='Hover', font=label_font, bg='lightblue', fg='black').grid(row=3, column=0, padx=20, pady=5, sticky='nsew')
-        # hover_label = tk.Label(
-        #     left_panel, 
-        #     text='Hover', 
-        #     font=label_font, 
-        #     bg='lightblue', 
-        #     fg='black',
-        # )
-        # hover_label.grid(row=6, column=0, padx=20, pady=5, sticky='nsew')
 
         hover_btn = tk.Button(
             left_panel, 
@@ -168,4 +135,3 @@ class LeftPanel:
             tk.Grid.columnconfigure(left_panel, 0, weight = 1)
 
         return left_panel
-
