@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import font
+import customtkinter as ctk
 
 class LeftPanel:
 
@@ -71,15 +72,15 @@ class LeftPanel:
 
 
         # label1 = tk.Label(left_panel, text='Autonomous/Manual', font=label_font, bg='lightblue', fg='black').grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
-        auto_manual_label = tk.Label(
-            left_panel, 
-            text='Autonomous/Manual', 
-            font=label_font, 
-            bg='lightblue', 
-            fg='black'
-        )
+        # auto_manual_label = tk.Label(
+        #     left_panel, 
+        #     text='Autonomous/Manual', 
+        #     font=label_font, 
+        #     bg='lightblue', 
+        #     fg='black'
+        # )
 
-        auto_manual_label.grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
+        # auto_manual_label.grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
 
         self.auto_btn = tk.Button(
             left_panel,
@@ -87,6 +88,7 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.set_autonomous_mode,
+            # corner_radius = 15,
             bg='#4CAF50',
             fg='white',
             relief=tk.RAISED
@@ -100,21 +102,22 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.set_manual_mode,
+            # corner_radius = 15,
             relief=tk.RAISED
         )
 
         self.manual_btn.grid(row=3, column=0, pady=3)
         
         # label2 = tk.Label(left_panel, text='Return Home', font=label_font, bg='lightblue', fg='black').grid(row=2, column=0, padx=20, pady=5, sticky='nsew')
-        return_home_label = tk.Label(
-            left_panel, 
-            text='Return Home', 
-            font=label_font, 
-            bg='lightblue', 
-            fg='black'
-        )
+        # return_home_label = tk.Label(
+        #     left_panel, 
+        #     text='Return Home', 
+        #     font=label_font, 
+        #     bg='lightblue', 
+        #     fg='black'
+        # )
 
-        return_home_label.grid(row=4, column=0, padx=20, pady=(10, 5), sticky='ew')
+        # return_home_label.grid(row=4, column=0, padx=20, pady=(10, 5), sticky='ew')
 
         return_home_btn = tk.Button(
             left_panel, 
@@ -122,6 +125,7 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.return_home,
+            # corner_radius = 15,
             bg="#4c00ff",
             fg='white',
             relief=tk.RAISED
@@ -129,14 +133,14 @@ class LeftPanel:
         return_home_btn.grid(row=5, column=0, pady=3)
 
         # label3 = tk.Label(left_panel, text='Hover', font=label_font, bg='lightblue', fg='black').grid(row=3, column=0, padx=20, pady=5, sticky='nsew')
-        hover_label = tk.Label(
-            left_panel, 
-            text='Hover', 
-            font=label_font, 
-            bg='lightblue', 
-            fg='black',
-        )
-        hover_label.grid(row=6, column=0, padx=20, pady=5, sticky='nsew')
+        # hover_label = tk.Label(
+        #     left_panel, 
+        #     text='Hover', 
+        #     font=label_font, 
+        #     bg='lightblue', 
+        #     fg='black',
+        # )
+        # hover_label.grid(row=6, column=0, padx=20, pady=5, sticky='nsew')
 
         hover_btn = tk.Button(
             left_panel, 
@@ -144,9 +148,19 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.hover,
+            # corner_radius = 15,
             relief=tk.RAISED
         )
         hover_btn.grid(row=7, column=0, pady=3)
+
+        takeoff_btn = tk.Button(
+            left_panel,
+            text="Takeoff",
+            font=button_font,
+            width=12,
+            relief=tk.RAISED
+        )
+        takeoff_btn.grid(row=9, column=0, pady=3)
 
 
         for i in range(8): 
