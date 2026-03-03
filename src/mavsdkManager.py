@@ -1,6 +1,7 @@
 import asyncio
 import threading
 from mavsdk import System
+from mavsdk.mission import MissionItem, MissionPlan
 
 class MAVSDKManager:
     def __init__(self):
@@ -21,19 +22,19 @@ class MAVSDKManager:
             "distance_from_home": None
         }
 
-    #starts baackground thread
+    # starts baackground thread
     def start(self):
         self.thread.start()
 
-    #runs inside background thread
+    # runs inside background thread
     def start_event_loop(self):
         asyncio.set_event_loop(self.loop)
-        #starts the asyncio loop
+        # starts the asyncio loop
         self.loop.create_task(self.connect_and_start_streams())
         self.loop.run_forever()
 
     async def connect_and_start_streams(self):
-        #connect to px4
+        # connect to px4
         print("Connecting to PX4...")
         await self.drone.connect(system_address="udp://:14540")
 
@@ -42,7 +43,7 @@ class MAVSDKManager:
                 print("Connected to drone!")
                 break
 
-        #start telemetry streams, each runs concurrently in infinite async loops
+        # start telemetry streams, each runs concurrently in infinite async loops
         asyncio.create_task(self.stream_position())
         asyncio.create_task(self.stream_velocity())
         asyncio.create_task(self.stream_attitude())
@@ -54,7 +55,7 @@ class MAVSDKManager:
             self.telemetry["altitude"] = round(pos.relative_altitude_m, 2)
 
     async def stream_velocity(self):
-        #ned = north east down coord system. Velocity in m/s
+        # ned = north east down coord system. Velocity in m/s
         async for vel in self.drone.telemetry.velocity_ned():
             #pythagorean theorem speed = sqrt(north² + east²)
             hor_speed = (vel.north_m_s**2 + vel.east_m_s**2) ** 0.5
@@ -62,6 +63,62 @@ class MAVSDKManager:
             self.telemetry["vertical_speed"] = round(vel.down_m_s, 2)
 
     async def stream_attitude(self):
-        #euler angles: yaw, pitch, roll
+        # euler angles: yaw, pitch, roll
         async for att in self.drone.telemetry.attitude_euler():
             self.telemetry["yaw"] = round(att.yaw_deg, 1)
+
+    def build_mission_plan(self, waypoints):
+        mission_items = []
+
+        for wp in waypoints:
+            item = MissionItem(
+                latitude_deg=wp.lat,
+                longitude_deg=wp.lon,
+                relative_altitude_m=wp.alt,
+                speed_m_s=wp.speed,
+                is_fly_through=True,
+                gimbal_pitch_deg=0.0,
+                gimbal_yaw_deg=0.0,
+                camera_action=MissionItem.CameraAction.NONE,
+                loiter_time_s=0,
+                camera_photo_interval_s=0,
+                acceptance_radius_m=1600,
+                yaw_deg=0,
+                camera_photo_distance_m=0,
+                vehicle_action='TakeOff'
+                    #TransitionToFw: When a waypoint is reached vehicle will transition to fixed-wing mode.
+                    #TransitionToMc: When a waypoint is reached vehicle will transition to multi-copter mode.
+
+            )
+            mission_items.append(item)
+
+        return MissionPlan(mission_items)
+    
+    def upload_mission(self, waypoints):
+        mission_plan = self.build_mission_plan(waypoints)
+
+        asyncio.run_coroutine_threadsafe(
+            self._upload_mission_async(mission_plan),
+            self.loop
+        )
+
+    async def _upload_mission_async(self, mission_plan):
+        print("Uploading mission...")
+        await self.drone.mission.clear_mission()
+        await self.drone.mission.upload_mission(mission_plan)
+        print("Mission uploaded successfully.")
+
+    def start_mission(self):
+        asyncio.run_coroutine_threadsafe(
+            self._start_mission_async(),
+            self.loop
+        )
+
+    async def _start_mission_async(self):
+        print("Arming...")
+        await self.drone.action.arm()
+
+        print("Starting mission...")
+        await self.drone.mission.start_mission()
+
+        print("Mission started.")

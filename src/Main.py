@@ -7,6 +7,7 @@ from src.panels.TopContainer import TopContainer
 from src.panels.leftPanel import LeftPanel
 from src.panels.rightPanel import RightPanel
 from src.panels.bottomPanel import BottomPanel
+from src.MissionController import MissionController
 
 
 def main():
@@ -53,6 +54,9 @@ def main():
     main_menu.add_command(label='Flight Planner', command=show_flight_planner)
     main_menu.add_command(label='Telemetry Logs')
 
+    mavsdk = MAVSDKManager()
+    mavsdk.start()
+
     # Create containers/panels using the modularized functions
     top_container = TopContainer()
     top_frame = top_container.create_top_container(root)
@@ -65,12 +69,12 @@ def main():
 
     right_panel = RightPanel()
     _right, drone_marker, map_widget = right_panel.create_right_panel(top_frame)
+    mission_controller = MissionController(map_widget, mavsdk)
+    right_panel.connect_mission_controller(mission_controller)
 
     bottom_panel = BottomPanel()
     _bottom = bottom_panel.create_bottom_panel(root)
 
-    mavsdk = MAVSDKManager()
-    mavsdk.start()
 
     def refresh():
         bottom_panel.update_telemetry(mavsdk.telemetry)
