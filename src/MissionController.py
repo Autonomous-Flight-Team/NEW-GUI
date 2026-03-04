@@ -9,6 +9,7 @@ class Waypoint:
 
 
 class MissionController:
+
     def __init__(self, map_widget, mavsdk_manager):
         self.map_widget = map_widget
         self.mavsdk = mavsdk_manager
@@ -17,45 +18,23 @@ class MissionController:
         self.markers = []
         self.path = None
 
-    # --------------------------
-    # Waypoint Management
-    # --------------------------
+    # ------------------------
+    # Waypoint Logic
+    # ------------------------
 
     def add_waypoint(self, lat, lon):
         wp = Waypoint(lat, lon)
         self.waypoints.append(wp)
 
         marker = self.map_widget.set_marker(
-            lat, lon, text=f"WP {len(self.waypoints)}"
+            lat, lon,
+            text=f"WP {len(self.waypoints)}"
         )
         self.markers.append(marker)
 
-        self.update_path()
+        self._update_path()
 
-    def delete_last_waypoint(self):
-        if not self.waypoints:
-            return
-
-        self.waypoints.pop()
-        marker = self.markers.pop()
-        marker.delete()
-
-        self.update_path()
-        for i, marker in enumerate(self.markers):
-            marker.set_text(f"WP {i+1}")
-
-    def clear_mission(self):
-        for marker in self.markers:
-            marker.delete()
-
-        if self.path:
-            self.path.delete()
-
-        self.waypoints.clear()
-        self.markers.clear()
-        self.path = None
-
-    def update_path(self):
+    def _update_path(self):
         if self.path:
             self.path.delete()
 
@@ -64,15 +43,14 @@ class MissionController:
         if len(coords) >= 2:
             self.path = self.map_widget.set_path(coords)
 
-    # --------------------------
-    # Drone Communication
-    # --------------------------
+    # ------------------------
+    # Drone Actions
+    # ------------------------
 
     def upload_mission(self):
         if not self.waypoints:
-            print("No waypoints to upload.")
+            print("No waypoints.")
             return
-
         self.mavsdk.upload_mission(self.waypoints)
 
     def start_mission(self):

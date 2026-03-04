@@ -68,9 +68,21 @@ def main():
     _left = left_panel.create_left_panel(top_frame)
 
     right_panel = RightPanel()
-    _right, drone_marker, map_widget = right_panel.create_right_panel(top_frame)
-    mission_controller = MissionController(map_widget, mavsdk)
-    right_panel.connect_mission_controller(mission_controller)
+    # _right, drone_marker, map_widget = right_panel.create_right_panel(top_frame)
+    # mission_controller = MissionController(map_widget, mavsdk)
+    # right_panel.connect_mission_controller(mission_controller)
+    _right, drone_marker = right_panel.create_right_panel(top_frame)
+
+    # Create MissionController
+    mission_controller = MissionController(
+        map_widget=right_panel.map_widget,
+        mavsdk_manager=mavsdk
+    )
+
+    # Inject callbacks into UI
+    right_panel.set_upload_callback(mission_controller.upload_mission)
+    right_panel.set_start_callback(mission_controller.start_mission)
+    right_panel.set_map_click_callback(mission_controller.add_waypoint)
 
     bottom_panel = BottomPanel()
     _bottom = bottom_panel.create_bottom_panel(root)
@@ -78,7 +90,7 @@ def main():
 
     def refresh():
         bottom_panel.update_telemetry(mavsdk.telemetry)
-        right_panel.update_drone_marker(mavsdk.telemetry, drone_marker, map_widget)
+        right_panel.update_drone_marker(mavsdk.telemetry, drone_marker)
         root.after(200, refresh)
 
     refresh()
