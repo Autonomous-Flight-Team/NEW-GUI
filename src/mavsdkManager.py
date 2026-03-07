@@ -36,7 +36,7 @@ class MAVSDKManager:
     async def connect_and_start_streams(self):
         # connect to px4
         print("Connecting to PX4...")
-        await self.drone.connect(system_address="udp://:14540")
+        await self.drone.connect(system_address="serial:///dev/cu.PL2303G-USBtoUART110:57600")
 
         async for state in self.drone.core.connection_state():
             if state.is_connected:
