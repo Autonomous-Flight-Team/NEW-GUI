@@ -1,13 +1,22 @@
 import tkinter as tk
 from tkinter import font
+import customtkinter as ctk
 
 class LeftPanel:
 
     # Adding functionality to show which mode is currently active.
-    def __init__(self):
+    def __init__(self, drone_controller):
+        self.drone = drone_controller
         self.current_mode = None
         self.auto_btn = None
         self.manual_btn = None
+
+    # The following function changes drone to 'takeoff' mode when the button
+    # is clicked.
+    def takeoff(self):
+        print("Takeoff pressed")
+        self.drone.run(self.drone.arm())
+        self.drone.run(self.drone.takeoff())
 
     # For 'set_autonomous_mode' and 'set_manual_mode', when that respective
     # is hit, the other button (either 'manual' or 'autonomous') is changed
@@ -32,6 +41,7 @@ class LeftPanel:
     # Printing 'Returning home.'
     def return_home(self):
         print("Returning home.")
+        self.drone.run(self.drone.return_to_launch())
     
     # Printing 'Hovering at current coordinates.'
     def hover(self):
@@ -68,25 +78,13 @@ class LeftPanel:
         label_font = font.Font(family='Segoe UI', size=14, weight='bold')
         button_font = font.Font(family='Segoe UI', size=10)
 
-
-
-        # label1 = tk.Label(left_panel, text='Autonomous/Manual', font=label_font, bg='lightblue', fg='black').grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
-        auto_manual_label = tk.Label(
-            left_panel, 
-            text='Autonomous/Manual', 
-            font=label_font, 
-            bg='lightblue', 
-            fg='black'
-        )
-
-        auto_manual_label.grid(row=1, column=0, padx=20, pady=5, sticky='nsew')
-
         self.auto_btn = tk.Button(
             left_panel,
             text="Autonomous",
             font=button_font,
             width=12,
             command=self.set_autonomous_mode,
+            # corner_radius = 15,
             bg='#4CAF50',
             fg='white',
             relief=tk.RAISED
@@ -100,21 +98,11 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.set_manual_mode,
+            # corner_radius = 15,
             relief=tk.RAISED
         )
 
         self.manual_btn.grid(row=3, column=0, pady=3)
-        
-        # label2 = tk.Label(left_panel, text='Return Home', font=label_font, bg='lightblue', fg='black').grid(row=2, column=0, padx=20, pady=5, sticky='nsew')
-        return_home_label = tk.Label(
-            left_panel, 
-            text='Return Home', 
-            font=label_font, 
-            bg='lightblue', 
-            fg='black'
-        )
-
-        return_home_label.grid(row=4, column=0, padx=20, pady=(10, 5), sticky='ew')
 
         return_home_btn = tk.Button(
             left_panel, 
@@ -122,21 +110,12 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.return_home,
+            # corner_radius = 15,
             bg="#4c00ff",
             fg='white',
             relief=tk.RAISED
         )
         return_home_btn.grid(row=5, column=0, pady=3)
-
-        # label3 = tk.Label(left_panel, text='Hover', font=label_font, bg='lightblue', fg='black').grid(row=3, column=0, padx=20, pady=5, sticky='nsew')
-        hover_label = tk.Label(
-            left_panel, 
-            text='Hover', 
-            font=label_font, 
-            bg='lightblue', 
-            fg='black',
-        )
-        hover_label.grid(row=6, column=0, padx=20, pady=5, sticky='nsew')
 
         hover_btn = tk.Button(
             left_panel, 
@@ -144,9 +123,20 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.hover,
+            # corner_radius = 15,
             relief=tk.RAISED
         )
         hover_btn.grid(row=7, column=0, pady=3)
+
+        takeoff_btn = tk.Button(
+            left_panel,
+            text="Takeoff",
+            font=button_font,
+            width=12,
+            command=self.takeoff,
+            relief=tk.RAISED
+        )
+        takeoff_btn.grid(row=9, column=0, pady=3)
 
 
         for i in range(8): 
@@ -154,4 +144,3 @@ class LeftPanel:
             tk.Grid.columnconfigure(left_panel, 0, weight = 1)
 
         return left_panel
-
