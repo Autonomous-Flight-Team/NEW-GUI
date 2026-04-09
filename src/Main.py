@@ -7,6 +7,8 @@ from src.panels.TopContainer import TopContainer
 from src.panels.leftPanel import LeftPanel
 from src.panels.rightPanel import RightPanel
 from src.panels.bottomPanel import BottomPanel
+from src.drone_controller import DroneController
+from src.panels.leftPanel import LeftPanel
 
 
 def main():
@@ -34,8 +36,8 @@ def main():
         
         # Recreate the home page layout
         top_frame = TopContainer.create_top_container(content)
-        _left = leftPanel.create_left_panel(top_frame)
-        _right = rightPanel.create_right_panel(top_frame)
+        _left = left_panel.create_left_panel(top_frame)
+        _right = right_panel.create_right_panel(top_frame)
         # Note: bottom_panel stays at root level, not in content
 
     def show_flight_planner():
@@ -59,8 +61,8 @@ def main():
 
     # Keep references to the panels in case we need to update them later.
     # Prefix with underscore to indicate they are intentionally unused for now
-
-    left_panel = LeftPanel()
+    drone = DroneController()
+    left_panel = LeftPanel(drone)
     _left = left_panel.create_left_panel(top_frame)
 
     right_panel = RightPanel()

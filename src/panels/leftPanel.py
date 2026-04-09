@@ -11,6 +11,13 @@ class LeftPanel:
         self.auto_btn = None
         self.manual_btn = None
 
+    # The following function changes drone to 'takeoff' mode when the button
+    # is clicked.
+    def takeoff(self):
+        print("Takeoff pressed")
+        self.drone.run(self.drone.arm())
+        self.drone.run(self.drone.takeoff())
+
     # For 'set_autonomous_mode' and 'set_manual_mode', when that respective
     # is hit, the other button (either 'manual' or 'autonomous') is changed
     # to a white background.
@@ -34,6 +41,7 @@ class LeftPanel:
     # Printing 'Returning home.'
     def return_home(self):
         print("Returning home.")
+        self.drone.run(self.drone.return_to_launch())
     
     # Printing 'Hovering at current coordinates.'
     def hover(self):
@@ -125,6 +133,7 @@ class LeftPanel:
             text="Takeoff",
             font=button_font,
             width=12,
+            command=self.takeoff,
             relief=tk.RAISED
         )
         takeoff_btn.grid(row=9, column=0, pady=3)

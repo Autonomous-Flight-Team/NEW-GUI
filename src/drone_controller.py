@@ -2,7 +2,7 @@ import asyncio
 from mavsdk import System
 
 class DroneController:
-    def _init_(self):
+    def __init__(self):
         self.drone = System()
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
@@ -27,7 +27,10 @@ class DroneController:
         await self.drone.action.arm()
 
     async def takeoff(self):
-        await self.drone.takeoff()
+        await self.drone.action.takeoff()
+
+    async def return_to_launch(self):
+        await self.drone.action.return_to_launch()
 
     async def land(self):
         await self.drone.action.land()
