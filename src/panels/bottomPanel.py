@@ -22,7 +22,6 @@ class BottomPanel:
             width=540,
             height=150
         )
-        bottom_panel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
         # Add a visible label at the top of the bottom panel for telemetry/data
         data_title = tk.Label(bottom_panel, text="TELEMETRY DATA", font=("Segoe UI", 16, 'bold'), fg='black', bg='lightgrey')

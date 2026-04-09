@@ -12,5 +12,4 @@ class TopContainer:
 			tk.Frame: the packed top container frame.
 		"""
 		top_frame = tk.Frame(root)
-		top_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 		return top_frame

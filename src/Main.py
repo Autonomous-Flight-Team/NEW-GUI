@@ -8,6 +8,7 @@ from src.panels.leftPanel import LeftPanel
 from src.panels.rightPanel import RightPanel
 from src.panels.bottomPanel import BottomPanel
 from src.MissionController import MissionController
+from src.panels.StatusBar import StatusBar
 
 
 def main():
@@ -15,14 +16,16 @@ def main():
     root = tk.Tk()
     root.title("GUI")
     root.geometry("600x500")
+    root.rowconfigure(0, weight=0)  # status bar row — fixed
+    root.rowconfigure(1, weight=1)  # top container row — expands
+    root.rowconfigure(2, weight=0)  # bottom panel row — fixed
+    root.columnconfigure(0, weight=1)
 
     # Menu Bar
     menu_font = font.Font(family='Segoe UI', size=16)
     menu = tk.Menu(root, font=menu_font)
     root.config(menu=menu)
 
-    content = tk.Frame(root)
-    content.pack(fill=tk.BOTH, expand=True)
 
     # Create FlightPlanner instance
     flight_planner = FlightPlanner(root)
@@ -57,9 +60,17 @@ def main():
     mavsdk = MAVSDKManager()
     mavsdk.start()
 
-    # Create containers/panels using the modularized functions
+    status_bar = StatusBar()
+    _status = status_bar.create_status_bar(root)
+    _status.grid(row=0, column=0, sticky='ew')
+
+    bottom_panel = BottomPanel()
+    _bottom = bottom_panel.create_bottom_panel(root)
+    _bottom.grid(row=2, column=0, sticky='ew', padx=5, pady=5)
+
     top_container = TopContainer()
     top_frame = top_container.create_top_container(root)
+    top_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=0)
 
     # Keep references to the panels in case we need to update them later.
     # Prefix with underscore to indicate they are intentionally unused for now
@@ -68,9 +79,6 @@ def main():
     _left = left_panel.create_left_panel(top_frame)
 
     right_panel = RightPanel()
-    # _right, drone_marker, map_widget = right_panel.create_right_panel(top_frame)
-    # mission_controller = MissionController(map_widget, mavsdk)
-    # right_panel.connect_mission_controller(mission_controller)
     _right, drone_marker = right_panel.create_right_panel(top_frame)
 
     # Create MissionController
@@ -84,11 +92,10 @@ def main():
     right_panel.set_start_callback(mission_controller.start_mission)
     right_panel.set_map_click_callback(mission_controller.add_waypoint)
 
-    bottom_panel = BottomPanel()
-    _bottom = bottom_panel.create_bottom_panel(root)
 
 
     def refresh():
+        status_bar.update_status(mavsdk.telemetry) 
         bottom_panel.update_telemetry(mavsdk.telemetry)
         right_panel.update_drone_marker(mavsdk.telemetry, drone_marker)
         root.after(200, refresh)
