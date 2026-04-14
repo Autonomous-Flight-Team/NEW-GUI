@@ -5,8 +5,8 @@ import customtkinter as ctk
 class LeftPanel:
 
     # Adding functionality to show which mode is currently active.
-    def __init__(self, drone_controller):
-        self.drone = drone_controller
+    def __init__(self, drone):
+        self.drone = drone
         self.current_mode = None
         self.auto_btn = None
         self.manual_btn = None
@@ -15,8 +15,7 @@ class LeftPanel:
     # is clicked.
     def takeoff(self):
         print("Takeoff pressed")
-        self.drone.run(self.drone.arm())
-        self.drone.run(self.drone.takeoff())
+        self.drone.arm_and_takeoff()
 
     # For 'set_autonomous_mode' and 'set_manual_mode', when that respective
     # is hit, the other button (either 'manual' or 'autonomous') is changed
@@ -41,11 +40,12 @@ class LeftPanel:
     # Printing 'Returning home.'
     def return_home(self):
         print("Returning home.")
-        self.drone.run(self.drone.return_to_launch())
+        self.drone.return_to_launch()
     
     # Printing 'Hovering at current coordinates.'
     def hover(self):
         print("Hovering at current coordinates.")
+        self.drone.hover()
 
 
     def create_left_panel(self, parent):

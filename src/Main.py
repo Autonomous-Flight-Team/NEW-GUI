@@ -9,7 +9,6 @@ from src.panels.rightPanel import RightPanel
 from src.panels.bottomPanel import BottomPanel
 from src.MissionController import MissionController
 from src.panels.StatusBar import StatusBar
-from src.drone_controller import DroneController
 from src.panels.leftPanel import LeftPanel
 
 
@@ -76,8 +75,7 @@ def main():
 
     # Keep references to the panels in case we need to update them later.
     # Prefix with underscore to indicate they are intentionally unused for now
-    drone = DroneController()
-    left_panel = LeftPanel(drone)
+    left_panel = LeftPanel(mavsdk)
     _left = left_panel.create_left_panel(top_frame)
 
     right_panel = RightPanel()

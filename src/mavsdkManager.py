@@ -43,22 +43,22 @@ class MAVSDKManager:
 
     async def connect_and_start_streams(self):
         # port = "/dev/cu.PL2303G-USBtoUART110"
-        port = "/dev/cu.usbserial-AB998Y3J"
+        # port = "/dev/cu.usbserial-AB998Y3J"
         
-        if not os.path.exists(port):
-            print(f"ERROR: Serial port {port} not found.")
-            print("Available ports:")
-            import glob
-            for p in glob.glob('/dev/tty.*'):
-                print(f"  {p}")
-            return
+        # if not os.path.exists(port):
+        #     print(f"ERROR: Serial port {port} not found.")
+        #     print("Available ports:")
+        #     import glob
+        #     for p in glob.glob('/dev/tty.*'):
+        #         print(f"  {p}")
+        #     return
         
         print("Connecting to drone...")
-        await self.drone.connect(system_address=f"serial://{port}:460800")
-        self.drone._sysid = 10
+        # await self.drone.connect(system_address=f"serial://{port}:460800")
+        # self.drone._sysid = 10
 
         # Simulation testing
-        # await self.drone.connect(system_address="udp://:14540")
+        await self.drone.connect(system_address="udp://:14540")
 
         async for state in self.drone.core.connection_state():
             if state.is_connected:
@@ -126,16 +126,58 @@ class MAVSDKManager:
             self.telemetry["battery_voltage"] = round(battery.voltage_v, 2)
             self.telemetry["battery_remaining"] = round(battery.remaining_percent * 100, 1)
 
-    # async def stream_connection(self):
-    #     async for state in self.drone.core.connection_state():
-    #         self.telemetry["is_connected"] = state.is_connected
     async def monitor_connection(self):
-        # Monitor for disconnection after initial connect
-        await asyncio.sleep(1)  # Let initial connection settle
+        await asyncio.sleep(3)
+        first = True
+        consecutive_failures = 0
+
         async for state in self.drone.core.connection_state():
-            self.telemetry["is_connected"] = state.is_connected
-            if not state.is_connected:
-                print("WARNING: Drone disconnected.")
+            if first:
+                first = False
+                continue
+
+            if state.is_connected:
+                consecutive_failures = 0
+                self.telemetry["is_connected"] = True
+            else:
+                consecutive_failures += 1
+                if consecutive_failures >= 2:  # Must fail twice in a row
+                    self.telemetry["is_connected"] = False
+                    print("WARNING: Drone disconnected.")
+
+    def arm_and_takeoff(self):
+        asyncio.run_coroutine_threadsafe(self._arm_and_takeoff_async(), self.loop)
+
+    async def _arm_and_takeoff_async(self):
+        print("Arming...")
+        await self.drone.action.arm()
+        print("Armed. Taking off...")
+        await self.drone.action.takeoff()
+        print("Takeoff complete.")
+
+    def land(self):
+        asyncio.run_coroutine_threadsafe(self._land_async(), self.loop)
+
+    async def _land_async(self):
+        print("Landing...")
+        await self.drone.action.land()
+        print("Landing complete.")
+
+    def return_to_launch(self):
+        asyncio.run_coroutine_threadsafe(self._rtl_async(), self.loop)
+
+    async def _rtl_async(self):
+        print("Returning to launch...")
+        await self.drone.action.return_to_launch()
+        print("RTL complete.")
+
+    def hover(self):
+        asyncio.run_coroutine_threadsafe(self._hover_async(), self.loop)
+
+    async def _hover_async(self):
+        print("Holding position...")
+        await self.drone.action.hold()
+        print("Holding.")
 
     def build_mission_plan(self, waypoints):
         mission_items = []
