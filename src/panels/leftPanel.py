@@ -25,16 +25,40 @@ class LeftPanel:
     # button is clicked and updates the button's appearance (green).
     def set_autonomous_mode(self):
         self.current_mode = 'autonomous'
-        self.auto_btn.config(relief=tk.SUNKEN, bg='#4CAF50', fg='white')
-        self.manual_btn.config(relief=tk.RAISED, bg='SystemButtonFace', fg='black')
+        self.auto_btn.config(
+            relief=tk.SUNKEN,
+            bg='#4CAF50',
+            fg='white',
+            activebackground='#45a049',
+            activeforeground='white'
+        )
+        self.manual_btn.config(
+            relief=tk.RAISED,
+            bg=self.auto_btn.master.cget('bg'),
+            fg='black',
+            activebackground='#d9d9d9',
+            activeforeground='black'
+        )
         print("Mode set to: Autonomous")
 
     # The following function changes drone to 'manual' mode when the button
     # is clicked and updates the button's appearance (blue).
     def set_manual_mode(self):
         self.current_mode = 'manual'
-        self.auto_btn.config(relief=tk.RAISED, bg='SystemButtonFace', fg='black')
-        self.manual_btn.config(relief=tk.SUNKEN, bg='#4CAF50', fg='white')
+        self.auto_btn.config(
+            relief=tk.RAISED,
+            bg=self.manual_btn.master.cget('bg'),
+            fg='black',
+            activebackground='#d9d9d9',
+            activeforeground='black'
+        )
+        self.manual_btn.config(
+            relief=tk.SUNKEN,
+            bg='#4CAF50',
+            fg='white',
+            activebackground='#45a049',
+            activeforeground='white'
+        )
         print("Mode set to: Manual")
 
     # Printing 'Returning home.'
@@ -84,9 +108,10 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.set_autonomous_mode,
-            # corner_radius = 15,
             bg='#4CAF50',
             fg='white',
+            activebackground='#45a049',
+            activeforeground='white',
             relief=tk.RAISED
         )
 
@@ -98,7 +123,10 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.set_manual_mode,
-            # corner_radius = 15,
+            bg=left_panel.cget('bg'),
+            fg='black',
+            activebackground='#d9d9d9',
+            activeforeground='black',
             relief=tk.RAISED
         )
 
