@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import font
 from .mavsdkManager import MAVSDKManager
 from .FlightPlanner import FlightPlanner
-
 from src.panels.TopContainer import TopContainer
 from src.panels.leftPanel import LeftPanel
 from src.panels.rightPanel import RightPanel
@@ -31,20 +30,30 @@ def main():
     # Create FlightPlanner instance
     flight_planner = FlightPlanner(root)
 
-    # Page callbacks need access to `content` and `menu`, so define them here
+    # Create a content frame that holds the current page.
+    content = tk.Frame(root, bg='white')
+    content.grid(row=1, column=0, sticky='nsew', padx=5, pady=0)
+
+    # Track the current map marker so refresh only updates it when visible.
+    drone_marker = None
+
     def show_home():
         """Display the home page with all panels."""
+        nonlocal drone_marker
         for widget in content.winfo_children():
             widget.destroy()
-        
-        # Recreate the home page layout
-        top_frame = TopContainer.create_top_container(content)
+
+        top_container = TopContainer()
+        top_frame = top_container.create_top_container(content)
+        top_frame.pack(fill=tk.BOTH, expand=True)
+
         _left = left_panel.create_left_panel(top_frame)
-        _right = right_panel.create_right_panel(top_frame)
-        # Note: bottom_panel stays at root level, not in content
+        _, drone_marker = right_panel.create_right_panel(top_frame)
 
     def show_flight_planner():
         """Display the flight planner page."""
+        for widget in content.winfo_children():
+            widget.destroy()
         flight_planner.create_flight_planner_page(content)
 
     # Menu items
@@ -69,17 +78,11 @@ def main():
     _bottom = bottom_panel.create_bottom_panel(root)
     _bottom.grid(row=2, column=0, sticky='ew', padx=5, pady=5)
 
-    top_container = TopContainer()
-    top_frame = top_container.create_top_container(root)
-    top_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=0)
-
-    # Keep references to the panels in case we need to update them later.
-    # Prefix with underscore to indicate they are intentionally unused for now
     left_panel = LeftPanel(mavsdk)
-    _left = left_panel.create_left_panel(top_frame)
-
     right_panel = RightPanel()
-    _right, drone_marker = right_panel.create_right_panel(top_frame)
+
+    # Show the home page initially.
+    show_home()
 
     # Create MissionController
     mission_controller = MissionController(
@@ -95,9 +98,10 @@ def main():
 
 
     def refresh():
-        status_bar.update_status(mavsdk.telemetry) 
+        status_bar.update_status(mavsdk.telemetry)
         bottom_panel.update_telemetry(mavsdk.telemetry)
-        right_panel.update_drone_marker(mavsdk.telemetry, drone_marker)
+        if drone_marker is not None and right_panel.map_widget is not None and right_panel.map_widget.winfo_exists():
+            right_panel.update_drone_marker(mavsdk.telemetry, drone_marker)
         root.after(200, refresh)
 
     refresh()

@@ -108,10 +108,11 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.set_autonomous_mode,
-            bg='#4CAF50',
-            fg='white',
-            activebackground='#45a049',
-            activeforeground='white',
+            # bg='#4CAF50',
+            highlightbackground='#4CAF50', 
+            fg='black',
+            # activebackground='#45a049',
+            # activeforeground='white',
             relief=tk.RAISED
         )
 
@@ -123,10 +124,11 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.set_manual_mode,
-            bg=left_panel.cget('bg'),
+            highlightbackground='#4CAF50', 
+            # bg=left_panel.cget('bg'),
             fg='black',
-            activebackground='#d9d9d9',
-            activeforeground='black',
+            # activebackground='#d9d9d9',
+            # activeforeground='black',
             relief=tk.RAISED
         )
 
@@ -138,9 +140,10 @@ class LeftPanel:
             font=button_font,
             width=12,
             command=self.return_home,
+            highlightbackground='#4CAF50', 
             # corner_radius = 15,
-            bg="#4c00ff",
-            fg='white',
+            # bg="#4c00ff",
+            fg='black',
             relief=tk.RAISED
         )
         return_home_btn.grid(row=5, column=0, pady=3)
@@ -149,6 +152,7 @@ class LeftPanel:
             left_panel, 
             text="Hover",
             font=button_font,
+            highlightbackground='#4CAF50', 
             width=12,
             command=self.hover,
             # corner_radius = 15,
@@ -160,6 +164,7 @@ class LeftPanel:
             left_panel,
             text="Takeoff",
             font=button_font,
+            highlightbackground='#4CAF50', 
             width=12,
             command=self.takeoff,
             relief=tk.RAISED
