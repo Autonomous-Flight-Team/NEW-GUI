@@ -23,6 +23,7 @@ class MAVSDKManager:
             "distance_from_home": None,
             "is_connected": False,
             "is_armed": False,
+            "is_armable": False,
             "flight_mode": None,
             "gps_fix_type": None,
             "gps_num_satellites": None,
@@ -63,31 +64,19 @@ class MAVSDKManager:
         async for state in self.drone.core.connection_state():
             if state.is_connected:
                 print("Connected to drone!")
+                self.telemetry["is_connected"] = True
                 break
-
-        # try:
-        #     async with asyncio.timeout(10):  # 10 second timeout
-        #         async for state in self.drone.core.connection_state():
-        #             if state.is_connected:
-        #                 print("Connected to drone!")
-        #                 break
-        # except asyncio.TimeoutError:
-        #     print("Connection timed out. Check port, baud rate, and cable.")
-        #     return  # Exit early — don't start streams
-
 
         # start telemetry streams, each runs concurrently in infinite async loops
         asyncio.create_task(self.stream_position())
         asyncio.create_task(self.stream_velocity())
         asyncio.create_task(self.stream_attitude())
-        # asyncio.create_task(self.stream_connection())
+        asyncio.create_task(self.stream_armable())
         asyncio.create_task(self.stream_armed())
         asyncio.create_task(self.stream_flight_mode())
         asyncio.create_task(self.stream_gps())
         asyncio.create_task(self.stream_battery())
         asyncio.create_task(self.monitor_connection())
-
-        self.telemetry["is_connected"] = True
 
     async def stream_position(self):
         async for pos in self.drone.telemetry.position():
@@ -107,6 +96,10 @@ class MAVSDKManager:
         # euler angles: yaw, pitch, roll
         async for att in self.drone.telemetry.attitude_euler():
             self.telemetry["yaw"] = round(att.yaw_deg, 1)
+
+    async def stream_armable(self):
+        async for health in self.drone.telemetry.health():
+            self.telemetry["is_armable"] = health.is_armable
 
     async def stream_armed(self):
         async for is_armed in self.drone.telemetry.armed():
@@ -145,13 +138,37 @@ class MAVSDKManager:
                     self.telemetry["is_connected"] = False
                     print("WARNING: Drone disconnected.")
 
-    def arm_and_takeoff(self):
-        asyncio.run_coroutine_threadsafe(self._arm_and_takeoff_async(), self.loop)
+    def arm(self): 
+        asyncio.run_coroutine_threadsafe(self._arm_async(), self.loop)
+    
+    async def _arm_async(self):
+        if not self.telemetry["is_armable"]:
+            print("Error: drone is not armable yet.")
+            return
+        try:
+            await self.drone.action.arm()
+            print("Armed successfully.")
+        except Exception as e:
+            print(f"Arming failed: {e}")
 
-    async def _arm_and_takeoff_async(self):
-        print("Arming...")
-        await self.drone.action.arm()
-        print("Armed. Taking off...")
+    def disarm(self):
+        asyncio.run_coroutine_threadsafe(self._disarm_async(), self.loop)
+
+    async def _disarm_async(self):
+        try:
+            await self.drone.action.disarm()
+            print("Disarmed successfully.")
+        except Exception as e:
+            print(f"Disarming failed: {e}")
+
+    def takeoff(self):
+        asyncio.run_coroutine_threadsafe(self._takeoff_async(), self.loop)
+
+    async def _takeoff_async(self):
+        if not self.telemetry["is_armed"]:
+            print("Error: Vehicle not armed yet.")
+            return
+        print("Taking off...")
         await self.drone.action.takeoff()
         print("Takeoff complete.")
 

@@ -33,10 +33,10 @@ class RightPanel:
         button_frame = tk.Frame(right_panel, bg="lightblue")
         button_frame.pack(fill=tk.X, pady=5)
 
-        self.upload_button = tk.Button(button_frame, text="Upload Mission")
+        self.upload_button = tk.Button(button_frame, text="Upload Mission", highlightbackground='light blue')
         self.upload_button.pack(side=tk.LEFT, padx=5)
 
-        self.start_button = tk.Button(button_frame, text="Start Mission")
+        self.start_button = tk.Button(button_frame, text="Start Mission", highlightbackground='light blue')
         self.start_button.pack(side=tk.LEFT, padx=5)
 
         # Drone marker placeholder
