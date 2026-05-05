@@ -15,10 +15,10 @@ def main():
     # 'root' is the main window
     root = tk.Tk()
     root.title("GUI")
-    root.geometry("600x500")
+    root.geometry("700x550")
     root.rowconfigure(0, weight=0)  # status bar row — fixed
     root.rowconfigure(1, weight=1)  # top container row — expands
-    root.rowconfigure(2, weight=0)  # bottom panel row — fixed
+    root.rowconfigure(2, weight=1)  # bottom panel row — fixed
     root.columnconfigure(0, weight=1)
 
     # Menu Bar

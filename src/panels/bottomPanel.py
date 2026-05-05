@@ -19,8 +19,8 @@ class BottomPanel:
         bottom_panel = tk.Frame(
             parent,
             bg='lightgrey',
-            width=540,
-            height=150
+            # width=540,
+            # height=300
         )
 
         # Add a visible label at the top of the bottom panel for telemetry/data
