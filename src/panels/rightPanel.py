@@ -10,6 +10,9 @@ class RightPanel:
         self.upload_button = None
         self.start_button = None
         self.status_log = None
+        self._map_frame = None
+        self._status_frame = None
+        self._view_var = None
 
     def create_right_panel(self, parent):
         right_panel = tk.Frame(parent, bg='lightblue')
@@ -23,16 +26,45 @@ class RightPanel:
             bg='lightblue'
         ).pack(pady=(8, 4))
 
-        # Map
+        #-------------------#
+        # Drop Down
+        #-------------------#
+        dropdown_frame = tk.Frame(right_panel, bg='lightblue')
+        dropdown_frame.pack(fill=tk.X, padx=5, pady=(0, 4))
+
+        tk.Label(
+            dropdown_frame,
+            text="View:",
+            font=("Segoe UI", 10),
+            bg='lightblue'
+        ).pack(side=tk.LEFT, padx=(0, 4))
+
+        self._view_var = tk.StringVar(value="Map")
+        view_menu = tk.OptionMenu(
+            dropdown_frame,
+            self._view_var,
+            "Map",
+            "MAVLink Status Board",
+            command=self._switch_view
+        )
+        view_menu.config(font=("Segoe UI", 10), bg='white', relief='flat')
+        view_menu.pack(side=tk.LEFT)
+
+        #-------------------#
+        # map frame
+        #-------------------#
+        self._map_frame = tk.Frame(right_panel, bg='lightblue')
+        self._map_frame.pack(fill=tk.BOTH, expand=True)
+
         self.map_widget = tkintermapview.TkinterMapView(
-            right_panel,
+            self._map_frame,
             corner_radius=0
         )
         self.map_widget.pack(fill=tk.BOTH, expand=True)
         self.map_widget.set_zoom(15)
 
-        # Buttons
-        button_frame = tk.Frame(right_panel, bg="lightblue")
+        # Buttons (live inside map frame so they hide with the map)
+        button_frame = tk.Frame(self._map_frame, bg="lightblue")
         button_frame.pack(fill=tk.X, pady=5)
 
         self.upload_button = tk.Button(button_frame, text="Upload Mission", highlightbackground='light blue')
@@ -41,11 +73,15 @@ class RightPanel:
         self.start_button = tk.Button(button_frame, text="Start Mission", highlightbackground='light blue')
         self.start_button.pack(side=tk.LEFT, padx=5)
 
-        # ----------------------------
-        #   MAVLink Status Board
-        # ----------------------------
+
+        #-----------------------------#
+        # MAVLink Status Board frame
+        #-----------------------------#
+        self._status_frame = tk.Frame(right_panel, bg='lightblue')
+        # (not packed yet — hidden by default)
+
         status_label = tk.Label(
-            right_panel,
+            self._status_frame,
             text="MAVLink Status Board",
             font=("Segoe UI", 11, 'bold'),
             fg='#1f77b4',
@@ -53,27 +89,33 @@ class RightPanel:
         )
         status_label.pack(pady=(6, 2))
 
-        log_frame = tk.Frame(right_panel, bg='lightblue')
-        log_frame.pack(fill=tk.X, padx=5, pady=(0, 8))
+        log_frame = tk.Frame(self._status_frame, bg='lightblue')
+        log_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=(0, 8))
 
         scrollbar = tk.Scrollbar(log_frame)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
+        # Black Frame for the messages to be displayed.
         self.status_log = tk.Text(
             log_frame,
-            height=8,
             state='disabled',
-            bg='#1e1e1e',
+            bg='#1e1e1e',  # <--- black background color
             fg='#00ff00',
             font=("Courier New", 10),
             yscrollcommand=scrollbar.set,
             relief='flat',
             wrap='word'
         )
-        self.status_log.pack(fill=tk.X)
-        scrollbar.config(command=self.status_log.yview)
 
+        # Test print message on status board
+        self.log_status("Hello, this is a test message!")
+
+        self.status_log.pack(fill=tk.BOTH, expand=True)
+        scrollbar.config(command=self.status_log.yview)
+       
+        #-----------------------------#
         # Drone marker placeholder
+        #-----------------------------#
         drone_marker = self.map_widget.set_marker(
             0, 0,
             text="DRONE",
@@ -83,10 +125,20 @@ class RightPanel:
 
         return right_panel, drone_marker
 
-    # ------------------------
-    # Public wiring methods
-    # ------------------------
+    #-------------------#
+    # View switching
+    #-------------------#
+    def _switch_view(self, selection):
+        if selection == "Map":
+            self._status_frame.pack_forget()
+            self._map_frame.pack(fill=tk.BOTH, expand=True)
+        else:
+            self._map_frame.pack_forget()
+            self._status_frame.pack(fill=tk.BOTH, expand=True)
 
+    #-----------------------#
+    # Public wiring methods
+    #-----------------------#
     def set_upload_callback(self, callback):
         self.upload_button.config(command=callback)
 
@@ -107,9 +159,9 @@ class RightPanel:
             drone_marker.set_position(lat, lon)
             self.map_widget.set_position(lat, lon)
 
-    # --------------------------#
-    # MAVLink Status Board Code
-    # --------------------------#
+    #----------------------#
+    # MAVLink Status Board
+    #----------------------#
     def log_status(self, message: str):
         """Append a timestamped message to the MAVLink status log."""
         if self.status_log is None:
