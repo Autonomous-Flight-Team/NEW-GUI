@@ -5,24 +5,28 @@ import customtkinter as ctk
 class LeftPanel:
 
     # Adding functionality to show which mode is currently active.
-    def __init__(self, drone):
+    def __init__(self, drone, right_panel):
         self.drone = drone
         self.current_mode = None
         self.auto_btn = None
         self.manual_btn = None
+        self.right_panel = right_panel  # Storing the reference to the right panel here
 
     def arm(self):
-        print("Arm pressed")
+        # print("Arm pressed")
+        self.right_panel.log_status("Arm pressed")
         self.drone.arm()
 
     def disarm(self):
-        print("Disarm pressed")
+        # print("Disarm pressed")
+        self.right_panel.log_status("Disarm pressed")
         self.drone.disarm()
 
     # The following function changes drone to 'takeoff' mode when the button
     # is clicked.
     def takeoff(self):
-        print("Takeoff pressed")
+        # print("Takeoff pressed")
+        self.right_panel.log_status("Takeoff pressed")
         self.drone.takeoff()
 
     # The following function changes the drone to 'autonomous' mode when the
@@ -43,7 +47,8 @@ class LeftPanel:
             activebackground='#d9d9d9',
             activeforeground='black'
         )
-        print("Mode set to: Autonomous")
+        # print("Mode set to: Autonomous")
+        self.right_panel.log_status("Mode set to: Autonomous")
 
     # The following function changes drone to 'manual' mode when the button
     # is clicked and updates the button's appearance (blue).
@@ -63,16 +68,19 @@ class LeftPanel:
             activebackground='#45a049',
             activeforeground='black'
         )
-        print("Mode set to: Manual")
+        # print("Mode set to: Manual")
+        self.right_panel.log_status("Mode set to: Manual")
 
     # Printing 'Returning home.'
     def return_home(self):
-        print("Returning home.")
+        # print("Returning home.")
+        self.right_panel.log_status("Returning home.")
         self.drone.return_to_launch()
 
     # Printing 'Hovering at current coordinates.'
     def hover(self):
-        print("Hovering at current coordinates.")
+        # print("Hovering at current coordinates.")
+        self.right_panel.log_status("Hovering at current coordinates.")
         self.drone.hover()
 
 

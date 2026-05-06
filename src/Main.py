@@ -78,8 +78,8 @@ def main():
     _bottom = bottom_panel.create_bottom_panel(root)
     _bottom.grid(row=2, column=0, sticky='ew', padx=5, pady=5)
 
-    left_panel = LeftPanel(mavsdk)
     right_panel = RightPanel()
+    left_panel = LeftPanel(mavsdk, right_panel)
 
     # Show the home page initially.
     show_home()
